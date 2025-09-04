@@ -26,8 +26,21 @@ pub fn main() !void {
 
     const interface = reader.interface();
 
-    _ = try interface.take(64);
+    // var read_byte: []u8 = undefined;
+    while (interface.take(1)) |byte| {
+        // do something with line...
+        std.debug.print("{any}", .{byte});
+    } else |err| switch (err) {
+        error.EndOfStream,
+        error.ReadFailed,
+        => |e| std.debug.print("{any}", .{e}),
+    }
+    // while (true) {
+    //     read_byte = interface.take(1) catch |err| {
+    //         std.debug.print("End of stream, {any}", .{err});
+    //         break;
+    //     };
+    //     std.debug.print("{any}\n", .{read_byte});
+    // }
 
-    std.debug.print("{any}\n", .{buffer});
-    std.debug.print("{any}\n", .{interface.bufferedLen()});
 }
